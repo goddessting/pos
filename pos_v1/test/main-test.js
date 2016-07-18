@@ -108,6 +108,25 @@ describe('pos', () => {
 
       expect(cartItem).toEqual(expectItems);
     });
+
+    it('when count is 3+3 , the count should be 6', () => {
+
+      var tag = ['ITEM000002-3', 'ITEM000002-3'];
+      var cartItem = buildCartItems(tag, allItems);
+      var expectItems = [
+        {
+          item: {
+            barcode: 'ITEM000002',
+            name: '苹果',
+            unit: '斤',
+            price: 5.50
+          },
+          count: 6
+        }
+      ];
+
+      expect(cartItem).toEqual(expectItems);
+    });
   });
 
 //  it('should print correct text', () => {

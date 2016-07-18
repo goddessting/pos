@@ -1,44 +1,23 @@
 'use strict';
 
-function buildCartItems(inputs, allItems) {
-  var cartItems = [];
+function  buildCartItems(tags, allItems){
+  let cartItems = [];
 
-  inputs.forEach((tags) => {
-    var elementTags = tags.split('-');
+  for(let tag of tags){
+    let splittedTag = tag.split('-');
+    let barcode = splittedTag[0];
+    let count = parseFloat(splittedTag[1] || 1);
 
-    if(isNotExist(cartItems, elementTags)){
-      converCartItems(elementTags, allItems, cartItems);
-    }
-    else{
-      buildCount(cartItems, elementTags);
-    }
-  });
+    let cartItem = cartItems.find(cartItem => cartItem.item.barcode === barcode);
 
-  return cartItems;
-}
-function buildCount(items, tags){
-  items.forEach((item) => {
-    if(item.barcode === tags[0]){
-      item.count+=parseFloat(tag[1] || 1);
-    }
-  });
-}
+    if(cartItem){
+      cartItem.count += count;
+    }else{
+      let item = allItems.find(item => item.barcode === barcode);
 
-function converCartItems(tag, allItems, items) {
-  allItems.forEach((allItem) => {
-    if (tag[0] === allItem.barcode) {
-      items.push({item: allItem, count: parseFloat(tag[1] || 1)});
-    }
-  });
-}
-
-function isNotExist(items, tags){
-  for(let i = 0; i < items.length; i++){
-    if(items[i].barcode === tags[0]){
-
-      return false;
+      cartItems.push({item:item, count: count});
     }
   }
 
-  return true;
+  return cartItems;
 }
