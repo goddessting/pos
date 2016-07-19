@@ -1,6 +1,6 @@
 'use strict';
 
-function buildCartItems(tags, allItems) {
+let buildCartItems = (tags, allItems) => {
   let cartItems = [];
 
   for (let tag of tags) {
@@ -22,25 +22,41 @@ function buildCartItems(tags, allItems) {
   return cartItems;
 }
 
-function buildReceiptItems(cartItems, promotions) {
-  let receiptItems = [];
-  let barcodes = promotions[0].barcodes;
+let buildReceiptItems = (cartItems, promotions) => {
+  return cartItems.map(cartItem => {
+    let promotionType = getPromotionType(cartItem.item.barcode, promotions);
+    let a = discount(cartItem, promotionType);
+    return {cartItem, subtotal: a[0], saved:a[1]}
+  })
+};
 
-  for (let cartItem of cartItems) {
-      let barcode = barcodes.find(barcode => cartItem.item.barcode === barcode);
+let getPromotionType = (barcode, promotions) => {
 
-      if (barcode && cartItem.count >= 2) {
-        let cartItem = cartItems.find(cartItem => cartItem.item.barcode === barcode);
+  let promotion = promotions.find(promotion => promotion.barcodes.includes(barcode));
+  return promotion ? promotion.type : '';
+};
 
-        receiptItems.push({
-          cartItem: cartItem,
-          subtotal: cartItem.count * cartItem.item.price,
-          saved: cartItem.count / 2 * cartItem.item.price
-        });
-      }else{
-        receiptItems.push({cartItem: cartItem, subtotal: cartItem.count * cartItem.item.price, saved: 0.00});
-      }
+let discount = (cartItem, getPromotionType) => {
+  let freeItemCount = 0;
+  if (getPromotionType === 'BUY_TWO_GET_ONE_FREE') {
+    freeItemCount = parseInt(cartItem.count / 3);
   }
 
-  return receiptItems;
-}
+  let saved = freeItemCount * cartItem.item.price;
+  let subtotal = cartItem.count * cartItem.item.price - saved;
+
+  return [subtotal, saved];
+};
+
+let buildReceipt = (receiptItems) => {
+  let total = 0;
+  let totalSaved = 0;
+
+  for(let receiptItem of receiptItems){
+    total += receiptItem.subtotal;
+    totalSaved += receiptItem.saved;
+  }
+
+  return {receiptItem: receiptItems, total: total, totalSaved:totalSaved};
+};
+
