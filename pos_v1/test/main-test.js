@@ -153,7 +153,7 @@ describe('pos', () => {
           unit: '瓶',
           price: 3.00
         },
-        count: 2
+        count: 3
       }];
 
       let receiptItems = buildReceiptItems(cartItems, promotions);
@@ -165,10 +165,10 @@ describe('pos', () => {
             unit: '瓶',
             price: 3.00
           },
-          count: 2
+          count: 3
         },
         subtotal: 6.00,
-        saved: 0.00
+        saved: 3.00
       }];
 
       expect(receiptItems).toEqual(expectReceiptItems);
@@ -183,7 +183,7 @@ describe('pos', () => {
             unit: '斤',
             price: 5.50
           },
-          count: 3
+          count: 2
         }];
 
       let receiptItems = buildReceiptItems(cartItems, promotions);
@@ -197,9 +197,9 @@ describe('pos', () => {
               unit: '斤',
               price: 5.50
             },
-            count: 3
+            count: 2
           },
-          subtotal: 16.5,
+          subtotal: 11.00,
           saved: 0.00
         }];
 
@@ -236,7 +236,7 @@ describe('pos', () => {
       }];
 
     let expectReceipt = {
-      receiptItem: [
+      receiptItems: [
         {
           cartItem: {
             item: {
